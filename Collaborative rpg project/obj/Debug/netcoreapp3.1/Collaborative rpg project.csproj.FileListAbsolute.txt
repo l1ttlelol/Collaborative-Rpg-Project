@@ -1,0 +1,14 @@
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\bin\Debug\netcoreapp3.1\Collaborative rpg project.exe
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\bin\Debug\netcoreapp3.1\Collaborative rpg project.deps.json
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\bin\Debug\netcoreapp3.1\Collaborative rpg project.runtimeconfig.json
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\bin\Debug\netcoreapp3.1\Collaborative rpg project.runtimeconfig.dev.json
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\bin\Debug\netcoreapp3.1\Collaborative rpg project.dll
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\bin\Debug\netcoreapp3.1\Collaborative rpg project.pdb
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.csproj.AssemblyReference.cache
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.AssemblyInfoInputs.cache
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.AssemblyInfo.cs
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.csproj.CoreCompileInputs.cache
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.dll
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.pdb
+C:\Users\Louis\source\repos\Collaborative-Rpg-Project\Collaborative rpg project\obj\Debug\netcoreapp3.1\Collaborative rpg project.genruntimeconfig.cache
