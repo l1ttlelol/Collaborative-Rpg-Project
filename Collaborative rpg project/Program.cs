@@ -35,14 +35,14 @@ namespace Collaborative_rpg_project
             while (IsGameRunning == true)
             {
                 CheckForGameOver();
-                if(IsGameOver == false)
+                if(IsGameRunning == true)
                 {
                     PlayerTurn();
-                    EnemyTurn();
                 }
-                else
+                CheckForGameOver();
+                if (IsGameRunning == true)
                 {
-                    IsGameRunning = false;
+                    EnemyTurn();
                 }
             }
             NextText_Placeholder();
@@ -92,7 +92,7 @@ namespace Collaborative_rpg_project
             {
                 if (IsPlayerDead != false || IsEnemyDead != false)
                 {
-                    IsGameOver = true;
+                    IsGameRunning = false;
                 }
             }
 
@@ -142,6 +142,19 @@ namespace Collaborative_rpg_project
             {
                 StatusText();
                 Console.WriteLine("It is the Enemy's turn");
+
+                //damaging the target
+                DamageBeingDealt = EnemyAttack;
+                PlayerFloatList[0] -= DamageBeingDealt;
+                UpdateVariables();
+                CheckForDeath(PlayerHP, PlayerBoolList);
+                UpdateVariables();
+
+                //output text to inform user of what happened
+                Console.WriteLine("The Enemy has attacked the Player!!!");
+                Console.WriteLine("The Enemy did 5 damage!!!");
+                Console.WriteLine("");
+
                 NextText_Placeholder();
             }
            
