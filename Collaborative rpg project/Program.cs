@@ -13,6 +13,9 @@ namespace Collaborative_rpg_project
             float DamageBeingDealt;
             float DamageMultiplier;
             bool IsGameOver = false;
+            int CriticalChance = 12;
+            int CriticalHit = 0;
+            float CriticalHitMultipler = 2;
 
             //Player Variables
             float PlayerHP = 10;
@@ -22,7 +25,7 @@ namespace Collaborative_rpg_project
             float[] PlayerFloatList = new float[3] { PlayerHP, PlayerMaxHP, PlayerAttack };
             bool[] PlayerBoolList = new bool[1] { IsPlayerDead };
 
-            //Player Variables
+            //Enemy Variables
             float EnemyHP = 10;
             float EnemyMaxHP = 10;
             float EnemyAttack = 5;
@@ -53,7 +56,8 @@ namespace Collaborative_rpg_project
             //A function that handes the start of the game
             void TitleScreen()
             {
-                Console.WriteLine("This is Version 0.1");
+                Console.WriteLine("This is Version 0.3");
+                Console.WriteLine("added a critical hit system");
                 Console.WriteLine("Hello and welcome to the RPG combat system press enter to begin...");
                 Console.ReadLine();
             }
@@ -163,12 +167,30 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy
             void Attack_PlayerAction()
             {
+                //Rolls the players Hit chance
+                Random rnd = new Random();
+                CriticalHit = rnd.Next(1, 100);
+
+                //checks if the critical hit is within range of 12
+
+                if (CriticalHit < CriticalChance)
+                {
+                    //operation for critical hit damage
+                    DamageBeingDealt *= CriticalHitMultipler;
+
+                    //resets criticalhit variable
+                    CriticalHit = 0;
+
+                    //updates the player on getting a crit hit
+                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
+                }
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
                 Console.WriteLine("You attack the enemy for " + DamageBeingDealt + " damage!!!");
                 StatusText();
+                
             }
         }
     }
