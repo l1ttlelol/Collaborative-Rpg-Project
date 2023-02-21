@@ -125,8 +125,12 @@ namespace Collaborative_rpg_project
             //Handles the output of text for the players actions
             void PlayerOptionsText()
             {
-                Console.WriteLine("Enter a number:");
-                Console.WriteLine("1) Attack");
+                Console.WriteLine("Enter a number for which weapon you would like to attack with:");
+                Console.WriteLine("1) Sword");
+                Console.WriteLine("2) Moloktov Cocktail");
+                Console.WriteLine("3) Ice-Pick");
+                Console.WriteLine("4) Blow Dart");
+                Console.WriteLine("5) Dagger");
             }
 
             //Handles the selection of the players action
@@ -137,7 +141,27 @@ namespace Collaborative_rpg_project
                 if (TempInput == "1")
                 {
                     DamageBeingDealt = PlayerAttack;
-                    Attack_PlayerAction();
+                    Sword_PlayerAction();
+                }
+                else if (TempInput == "2")
+                {
+                    DamageBeingDealt = PlayerAttack;
+                    Moloktov_PlayerAction();
+                }
+                else if (TempInput == "3")
+                {
+                    DamageBeingDealt = PlayerAttack;
+                    IcePick_PlayerAction();
+                }
+                else if (TempInput == "4")
+                {
+                    DamageBeingDealt = PlayerAttack;
+                    BlowDart_PlayerAction();
+                }
+                else if (TempInput == "5")
+                {
+                    DamageBeingDealt = PlayerAttack;
+                    Dagger_PlayerAction();
                 }
             }
 
@@ -164,8 +188,8 @@ namespace Collaborative_rpg_project
            
             //ACTION FUNCTIONS          =========================================================
 
-            //The player Attacks the enemy
-            void Attack_PlayerAction()
+            //The player Attacks the enemy for neutral damage
+            void Sword_PlayerAction()
             {
                 //Rolls the players Hit chance
                 Random rnd = new Random();
@@ -188,9 +212,125 @@ namespace Collaborative_rpg_project
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
-                Console.WriteLine("You attack the enemy for " + DamageBeingDealt + " damage!!!");
+                Console.WriteLine("You attack the enemy with a sword for " + DamageBeingDealt + " damage!!!");
                 StatusText();
                 
+            }
+
+            //The player Attacks the enemy for fire damage                          //PLACEHOLDER
+            void Moloktov_PlayerAction()
+            {
+                //Rolls the players Hit chance
+                Random rnd = new Random();
+                CriticalHit = rnd.Next(1, 100);
+
+                //checks if the critical hit is within range of 12
+
+                if (CriticalHit < CriticalChance)
+                {
+                    //operation for critical hit damage
+                    DamageBeingDealt *= CriticalHitMultipler;
+
+                    //resets criticalhit variable
+                    CriticalHit = 0;
+
+                    //updates the player on getting a crit hit
+                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
+                }
+                EnemyFloatList[0] -= DamageBeingDealt;
+                UpdateVariables();
+                CheckForDeath(EnemyHP, EnemyBoolList);
+                UpdateVariables();
+                Console.WriteLine("You throw a moloktov cocktail  for " + DamageBeingDealt + " damage!!!");
+                StatusText();
+
+            }
+
+            //The player Attacks the enemy for frost damage                         //PLACEHOLDER
+            void IcePick_PlayerAction()
+            {
+                //Rolls the players Hit chance
+                Random rnd = new Random();
+                CriticalHit = rnd.Next(1, 100);
+
+                //checks if the critical hit is within range of 12
+
+                if (CriticalHit < CriticalChance)
+                {
+                    //operation for critical hit damage
+                    DamageBeingDealt *= CriticalHitMultipler;
+
+                    //resets criticalhit variable
+                    CriticalHit = 0;
+
+                    //updates the player on getting a crit hit
+                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
+                }
+                EnemyFloatList[0] -= DamageBeingDealt;
+                UpdateVariables();
+                CheckForDeath(EnemyHP, EnemyBoolList);
+                UpdateVariables();
+                Console.WriteLine("You shatter the enemy with a ice-pick for " + DamageBeingDealt + " damage!!!");
+                StatusText();
+
+            }
+
+            //The player Attacks the enemy for poison damage                        //PLACEHOLDER
+            void BlowDart_PlayerAction()
+            {
+                //Rolls the players Hit chance
+                Random rnd = new Random();
+                CriticalHit = rnd.Next(1, 100);
+
+                //checks if the critical hit is within range of 12
+
+                if (CriticalHit < CriticalChance)
+                {
+                    //operation for critical hit damage
+                    DamageBeingDealt *= CriticalHitMultipler;
+
+                    //resets criticalhit variable
+                    CriticalHit = 0;
+
+                    //updates the player on getting a crit hit
+                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
+                }
+                EnemyFloatList[0] -= DamageBeingDealt;
+                UpdateVariables();
+                CheckForDeath(EnemyHP, EnemyBoolList);
+                UpdateVariables();
+                Console.WriteLine("You spat a poiosnous dart at the enemy for " + DamageBeingDealt + " damage!!!");
+                StatusText();
+
+            }
+
+            //The player Attacks the enemy for bleed damage                         //PLACEHOLDER
+            void Dagger_PlayerAction()
+            {
+                //Rolls the players Hit chance
+                Random rnd = new Random();
+                CriticalHit = rnd.Next(1, 100);
+
+                //checks if the critical hit is within range of 12
+
+                if (CriticalHit < CriticalChance)
+                {
+                    //operation for critical hit damage
+                    DamageBeingDealt *= CriticalHitMultipler;
+
+                    //resets criticalhit variable
+                    CriticalHit = 0;
+
+                    //updates the player on getting a crit hit
+                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
+                }
+                EnemyFloatList[0] -= DamageBeingDealt;
+                UpdateVariables();
+                CheckForDeath(EnemyHP, EnemyBoolList);
+                UpdateVariables();
+                Console.WriteLine("You stabbed the enemy with a dagger for " + DamageBeingDealt + " damage!!!");
+                StatusText();
+
             }
         }
     }
