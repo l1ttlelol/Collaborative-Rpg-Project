@@ -31,6 +31,7 @@ namespace Collaborative_rpg_project
             bool[] EnemyBoolList = new bool[1] { IsEnemyDead };
 
             //RUN LOOP                  =========================================================
+            TitleScreen();
             while (IsGameRunning == true)
             {
                 CheckForGameOver();
@@ -49,6 +50,13 @@ namespace Collaborative_rpg_project
 
             //SYSTEM FUNCTION           =========================================================
 
+            //A function that handes the start of the game
+            void TitleScreen()
+            {
+                Console.WriteLine("This is Version 0.1");
+                Console.WriteLine("Hello and welcome to the RPG combat system press enter to begin...");
+                Console.ReadLine();
+            }
 
             //COMMON FUNCTIONS          =========================================================
 
