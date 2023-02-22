@@ -22,6 +22,7 @@ namespace Collaborative_rpg_project
             float PlayerMaxHP = 10;
             float PlayerAttack = 5;
             bool IsPlayerDead = false;
+            string PlayerCritText = "You got a critical hit! ";
             float[] PlayerFloatList = new float[3] { PlayerHP, PlayerMaxHP, PlayerAttack };
             bool[] PlayerBoolList = new bool[1] { IsPlayerDead };
 
@@ -30,8 +31,11 @@ namespace Collaborative_rpg_project
             float EnemyMaxHP = 10;
             float EnemyAttack = 5;
             bool IsEnemyDead = false;
+            string EnemyCritText = "The Enemy Attacked you and got a critical hit! ";
             float[] EnemyFloatList = new float[3] { EnemyHP, EnemyMaxHP, EnemyAttack };
             bool[] EnemyBoolList = new bool[1] { IsEnemyDead };
+
+            
 
             //RUN LOOP                  =========================================================
             TitleScreen();
@@ -60,6 +64,27 @@ namespace Collaborative_rpg_project
                 Console.WriteLine("added a critical hit system");
                 Console.WriteLine("Hello and welcome to the RPG combat system press enter to begin...");
                 Console.ReadLine();
+            }
+
+            //Runs the check to see whether an effect is critical or not
+            void CriticalCheck(string CritText)
+            {
+                Random rnd = new Random();
+                CriticalHit = rnd.Next(1, 100);
+
+                //checks if the critical hit is within range of 12
+
+                if (CriticalHit < CriticalChance)
+                {
+                    //operation for critical hit damage
+                    DamageBeingDealt *= CriticalHitMultipler;
+
+                    //resets criticalhit variable
+                    CriticalHit = 0;
+
+                    //updates the player on getting a crit hit
+                    Console.WriteLine(CritText);
+                }
             }
 
             //COMMON FUNCTIONS          =========================================================
@@ -173,6 +198,7 @@ namespace Collaborative_rpg_project
 
                 //damaging the target
                 DamageBeingDealt = EnemyAttack;
+                CriticalCheck(EnemyCritText);
                 PlayerFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(PlayerHP, PlayerBoolList);
@@ -180,7 +206,7 @@ namespace Collaborative_rpg_project
 
                 //output text to inform user of what happened
                 Console.WriteLine("The Enemy has attacked the Player!!!");
-                Console.WriteLine("The Enemy did 5 damage!!!");
+                Console.WriteLine("The Enemy did" + DamageBeingDealt + "damage!!!");
                 Console.WriteLine("");
 
                 NextText_Placeholder();
@@ -191,23 +217,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for neutral damage
             void Sword_PlayerAction()
             {
-                //Rolls the players Hit chance
-                Random rnd = new Random();
-                CriticalHit = rnd.Next(1, 100);
-
-                //checks if the critical hit is within range of 12
-
-                if (CriticalHit < CriticalChance)
-                {
-                    //operation for critical hit damage
-                    DamageBeingDealt *= CriticalHitMultipler;
-
-                    //resets criticalhit variable
-                    CriticalHit = 0;
-
-                    //updates the player on getting a crit hit
-                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
-                }
+                CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
@@ -220,23 +230,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for fire damage                          //PLACEHOLDER
             void Moloktov_PlayerAction()
             {
-                //Rolls the players Hit chance
-                Random rnd = new Random();
-                CriticalHit = rnd.Next(1, 100);
-
-                //checks if the critical hit is within range of 12
-
-                if (CriticalHit < CriticalChance)
-                {
-                    //operation for critical hit damage
-                    DamageBeingDealt *= CriticalHitMultipler;
-
-                    //resets criticalhit variable
-                    CriticalHit = 0;
-
-                    //updates the player on getting a crit hit
-                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
-                }
+                CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
@@ -249,23 +243,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for frost damage                         //PLACEHOLDER
             void IcePick_PlayerAction()
             {
-                //Rolls the players Hit chance
-                Random rnd = new Random();
-                CriticalHit = rnd.Next(1, 100);
-
-                //checks if the critical hit is within range of 12
-
-                if (CriticalHit < CriticalChance)
-                {
-                    //operation for critical hit damage
-                    DamageBeingDealt *= CriticalHitMultipler;
-
-                    //resets criticalhit variable
-                    CriticalHit = 0;
-
-                    //updates the player on getting a crit hit
-                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
-                }
+                CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
@@ -278,23 +256,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for poison damage                        //PLACEHOLDER
             void BlowDart_PlayerAction()
             {
-                //Rolls the players Hit chance
-                Random rnd = new Random();
-                CriticalHit = rnd.Next(1, 100);
-
-                //checks if the critical hit is within range of 12
-
-                if (CriticalHit < CriticalChance)
-                {
-                    //operation for critical hit damage
-                    DamageBeingDealt *= CriticalHitMultipler;
-
-                    //resets criticalhit variable
-                    CriticalHit = 0;
-
-                    //updates the player on getting a crit hit
-                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
-                }
+                CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
@@ -307,23 +269,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for bleed damage                         //PLACEHOLDER
             void Dagger_PlayerAction()
             {
-                //Rolls the players Hit chance
-                Random rnd = new Random();
-                CriticalHit = rnd.Next(1, 100);
-
-                //checks if the critical hit is within range of 12
-
-                if (CriticalHit < CriticalChance)
-                {
-                    //operation for critical hit damage
-                    DamageBeingDealt *= CriticalHitMultipler;
-
-                    //resets criticalhit variable
-                    CriticalHit = 0;
-
-                    //updates the player on getting a crit hit
-                    Console.WriteLine("You attacked the enemy and got a critical hit! ");
-                }
+                CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
                 CheckForDeath(EnemyHP, EnemyBoolList);
