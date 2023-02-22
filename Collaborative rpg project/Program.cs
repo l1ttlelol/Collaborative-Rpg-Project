@@ -10,12 +10,18 @@ namespace Collaborative_rpg_project
             //System Variables
             string TempInput;
             bool IsGameRunning = true;
-            float DamageBeingDealt;
-            float DamageMultiplier;
+            float DamageBeingDealt = 0;
+            float DamageMultiplier = 1.5f;
             bool IsGameOver = false;
             int CriticalChance = 12;
             int CriticalHit = 0;
             float CriticalHitMultipler = 2;
+
+            //Status Variables
+            float BurnDamageModifier = 0.5f;
+            float BurnDamage = 0f;
+            int BurnMaxTurns = 3;
+            int BurnTurns = 0;
 
             //Player Variables
             float PlayerHP = 100;
@@ -32,10 +38,9 @@ namespace Collaborative_rpg_project
             float EnemyAttack = 5;
             bool IsEnemyDead = false;
             string EnemyCritText = "The Enemy Attacked you and got a critical hit! ";
+            string EnemyStatus = "";
             float[] EnemyFloatList = new float[3] { EnemyHP, EnemyMaxHP, EnemyAttack };
             bool[] EnemyBoolList = new bool[1] { IsEnemyDead };
-
-            string EnemyStatus = "";
 
             //RUN LOOP                  =========================================================
             TitleScreen();
@@ -49,7 +54,6 @@ namespace Collaborative_rpg_project
                 CheckForGameOver();
                 if (IsGameRunning == true)
                 {
-                    StatusEffectsMaster(EnemyFloatList, EnemyStatus);
                     EnemyTurn();
                 }
             }
@@ -101,12 +105,12 @@ namespace Collaborative_rpg_project
             }
 
             //Hanldes the selection of a statuses effect function
-            void StatusEffectsMaster(float[] TargetFloatList, string TargetStatus)
+            string StatusEffectsMaster(float[] TargetFloatList, string TargetStatus)
             {
                 //Set of conditionals to run StatusEffects functions that are held in Action functions
                 if (TargetStatus == "Burnt")
                 {
-                    BurnStatusEffect(TargetFloatList);
+                    TargetStatus = BurnStatusEffect(TargetFloatList, TargetStatus);
                 }
                 else if (TargetStatus == "Frozen")
                 {
@@ -120,6 +124,7 @@ namespace Collaborative_rpg_project
                 {
                     BleedStatusEffect(TargetFloatList);
                 }
+                return TargetStatus;
             }
 
             //COMMON FUNCTIONS          =========================================================
@@ -203,31 +208,26 @@ namespace Collaborative_rpg_project
 
                 if (consoleKeyInfo.KeyChar == '1')
                 {
-                    DamageBeingDealt = PlayerAttack;
                     Console.WriteLine("");
                     Sword_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '2')
                 {
-                    DamageBeingDealt = PlayerAttack;
                     Console.WriteLine("");
                     Moloktov_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '3')
                 {
-                    DamageBeingDealt = PlayerAttack;
                     Console.WriteLine("");
                     IcePick_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '4')
                 {
-                    DamageBeingDealt = PlayerAttack;
                     Console.WriteLine("");
                     BlowDart_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '5')
                 {
-                    DamageBeingDealt = PlayerAttack;
                     Console.WriteLine("");
                     Dagger_PlayerAction();
                 }
@@ -238,6 +238,8 @@ namespace Collaborative_rpg_project
             {
                 StatusText();
                 Console.WriteLine("It is the Enemy's turn");
+
+                EnemyStatus = StatusEffectsMaster(EnemyFloatList, EnemyStatus);
 
                 //damaging the target
                 DamageBeingDealt = EnemyAttack;
@@ -260,6 +262,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for neutral damage
             void Sword_PlayerAction()
             {
+                DamageBeingDealt = PlayerAttack * DamageMultiplier;
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
@@ -273,12 +276,21 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for fire damage                          //PLACEHOLDER
             void Moloktov_PlayerAction()
             {
+                DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
+
+                //Regular attack stuff
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+
+                //Burn status stuff
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Burnt");
+                BurnTurns = BurnMaxTurns;
+                BurnDamage = DamageBeingDealt * BurnDamageModifier;
+
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
+
                 Console.WriteLine("You throw a moloktov cocktail  for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
@@ -286,6 +298,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for frost damage                         //PLACEHOLDER
             void IcePick_PlayerAction()
             {
+                DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
@@ -299,6 +312,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for poison damage                        //PLACEHOLDER
             void BlowDart_PlayerAction()
             {
+                DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
@@ -312,6 +326,7 @@ namespace Collaborative_rpg_project
             //The player Attacks the enemy for bleed damage                         //PLACEHOLDER
             void Dagger_PlayerAction()
             {
+                DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
@@ -322,9 +337,23 @@ namespace Collaborative_rpg_project
                 StatusText();
             }
 
-            void BurnStatusEffect(float[] TargetFloatList)
+            string BurnStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
                 //Insert Burn Status Effect here
+                BurnTurns -= 1;
+                
+                if (BurnTurns > 0)
+                {
+                    TargetFloatList[0] -= BurnDamage;
+                    Console.WriteLine("They take " + BurnDamage + " damge from burn!!!");
+                }
+                else
+                {
+                    TargetStatus = "";
+                    Console.WriteLine("They are cured of burn");
+                }
+                UpdateVariables();
+                return TargetStatus;
             }
 
             void FreezeStatusEffect(float[] TargetFloatList)
