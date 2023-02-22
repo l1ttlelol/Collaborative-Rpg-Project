@@ -22,6 +22,12 @@ namespace Collaborative_rpg_project
             float BurnDamage = 0f;
             int BurnMaxTurns = 3;
             int BurnTurns = 0;
+            int FreezeMaxTurns = 4;
+            int FreezeTurns = 0;
+            int AcidicMaxTurns = 3;
+            int AcidicTurns = 0;
+            int BleedMaxTurns = 3;
+            int BleedTurns = 0;
 
             //Player Variables
             float PlayerHP = 100;
@@ -114,15 +120,15 @@ namespace Collaborative_rpg_project
                 }
                 else if (TargetStatus == "Frozen")
                 {
-                    FreezeStatusEffect(TargetFloatList);
+                    TargetStatus = FreezeStatusEffect(TargetFloatList, TargetStatus);
                 }
                 else if (TargetStatus == "Acidic")
                 {
-                    AcidicStatusEffect(TargetFloatList);
+                    TargetStatus = AcidicStatusEffect(TargetFloatList, TargetStatus);
                 }
                 else if (TargetStatus == "Bleeding")
                 {
-                    BleedStatusEffect(TargetFloatList);
+                    TargetStatus = BleedStatusEffect(TargetFloatList, TargetStatus);
                 }
                 return TargetStatus;
             }
@@ -300,11 +306,16 @@ namespace Collaborative_rpg_project
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
+
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Frozen");
+                FreezeTurns = FreezeMaxTurns;
+
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
+
                 Console.WriteLine("You shatter the enemy with a ice-pick for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
@@ -314,11 +325,16 @@ namespace Collaborative_rpg_project
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
+
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Acidic");
+                AcidicTurns = AcidicMaxTurns;
+
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
+
                 Console.WriteLine("You spat a poiosnous dart at the enemy for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
@@ -328,11 +344,16 @@ namespace Collaborative_rpg_project
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
+
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Bleeding");
+                BleedTurns = BleedMaxTurns;
+
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
+
                 Console.WriteLine("You stabbed the enemy with a dagger for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
@@ -356,19 +377,55 @@ namespace Collaborative_rpg_project
                 return TargetStatus;
             }
 
-            void FreezeStatusEffect(float[] TargetFloatList)
+            string FreezeStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
-                //Insert Freeze Status Effect here
+                FreezeTurns -= 1;
+
+                if (FreezeTurns > 0)
+                {
+                    //Insert Freeze Status Effect here
+                }
+                else
+                {
+                    TargetStatus = "";
+                    Console.WriteLine("They are cured of Chilled");
+                }
+                UpdateVariables();
+                return TargetStatus;
             }
 
-            void AcidicStatusEffect(float[] TargetFloatList)
+            string AcidicStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
-                //Insert Acidic Status Effect here
+                AcidicTurns -= 1;
+
+                if (AcidicTurns > 0)
+                {
+                    //Insert Acidic Status Effect here
+                }
+                else
+                {
+                    TargetStatus = "";
+                    Console.WriteLine("They are cured of Acidic");
+                }
+                UpdateVariables();
+                return TargetStatus;
             }
 
-            void BleedStatusEffect(float[] TargetFloatList)
+            string BleedStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
-                //Insert Bleed Status Effect here
+                BleedTurns -= 1;
+
+                if (BleedTurns > 0)
+                {
+                    //Insert Bleed Status Effect here
+                }
+                else
+                {
+                    TargetStatus = "";
+                    Console.WriteLine("They are cured of Bleed");
+                }
+                UpdateVariables();
+                return TargetStatus;
             }
         }
     }
