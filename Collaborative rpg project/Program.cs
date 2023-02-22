@@ -18,8 +18,8 @@ namespace Collaborative_rpg_project
             float CriticalHitMultipler = 2;
 
             //Player Variables
-            float PlayerHP = 10;
-            float PlayerMaxHP = 10;
+            float PlayerHP = 100;
+            float PlayerMaxHP = 100;
             float PlayerAttack = 5;
             bool IsPlayerDead = false;
             string PlayerCritText = "You got a critical hit! ";
@@ -27,15 +27,15 @@ namespace Collaborative_rpg_project
             bool[] PlayerBoolList = new bool[1] { IsPlayerDead };
 
             //Enemy Variables
-            float EnemyHP = 10;
-            float EnemyMaxHP = 10;
+            float EnemyHP = 100;
+            float EnemyMaxHP = 100;
             float EnemyAttack = 5;
             bool IsEnemyDead = false;
             string EnemyCritText = "The Enemy Attacked you and got a critical hit! ";
             float[] EnemyFloatList = new float[3] { EnemyHP, EnemyMaxHP, EnemyAttack };
             bool[] EnemyBoolList = new bool[1] { IsEnemyDead };
 
-            
+            string EnemyStatus = "";
 
             //RUN LOOP                  =========================================================
             TitleScreen();
@@ -49,6 +49,7 @@ namespace Collaborative_rpg_project
                 CheckForGameOver();
                 if (IsGameRunning == true)
                 {
+                    StatusEffectsMaster(EnemyFloatList, EnemyStatus);
                     EnemyTurn();
                 }
             }
@@ -87,6 +88,40 @@ namespace Collaborative_rpg_project
                 }
             }
 
+            //Handles the assigning of a status effect to a target
+            string OverwriteStatus(string PriorStatus, string NewStatus)
+            {
+                if (NewStatus != PriorStatus)
+                {
+                    Console.WriteLine("A status interaction has occured: " + PriorStatus + " ---------> " + NewStatus);
+                    PriorStatus = NewStatus;
+                    Console.WriteLine("");
+                }
+                return PriorStatus;
+            }
+
+            //Hanldes the selection of a statuses effect function
+            void StatusEffectsMaster(float[] TargetFloatList, string TargetStatus)
+            {
+                //Set of conditionals to run StatusEffects functions that are held in Action functions
+                if (TargetStatus == "Burnt")
+                {
+                    BurnStatusEffect(TargetFloatList);
+                }
+                else if (TargetStatus == "Frozen")
+                {
+                    FreezeStatusEffect(TargetFloatList);
+                }
+                else if (TargetStatus == "Acidic")
+                {
+                    AcidicStatusEffect(TargetFloatList);
+                }
+                else if (TargetStatus == "Bleeding")
+                {
+                    BleedStatusEffect(TargetFloatList);
+                }
+            }
+
             //COMMON FUNCTIONS          =========================================================
 
             //A placeholder for detecting Enter input to clear the screen
@@ -112,7 +147,7 @@ namespace Collaborative_rpg_project
             {
                 Console.WriteLine("");
                 Console.WriteLine("Player health   ============= " + PlayerHP + "/" + PlayerMaxHP);
-                Console.WriteLine("Enemy health    ============= " + EnemyHP + "/" + EnemyMaxHP);
+                Console.WriteLine("Enemy health    ============= " + EnemyHP + "/" + EnemyMaxHP + " ---------- " + EnemyStatus);
                 Console.WriteLine("");
             }
 
@@ -169,26 +204,31 @@ namespace Collaborative_rpg_project
                 if (consoleKeyInfo.KeyChar == '1')
                 {
                     DamageBeingDealt = PlayerAttack;
+                    Console.WriteLine("");
                     Sword_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '2')
                 {
                     DamageBeingDealt = PlayerAttack;
+                    Console.WriteLine("");
                     Moloktov_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '3')
                 {
                     DamageBeingDealt = PlayerAttack;
+                    Console.WriteLine("");
                     IcePick_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '4')
                 {
                     DamageBeingDealt = PlayerAttack;
+                    Console.WriteLine("");
                     BlowDart_PlayerAction();
                 }
                 else if (consoleKeyInfo.KeyChar == '5')
                 {
                     DamageBeingDealt = PlayerAttack;
+                    Console.WriteLine("");
                     Dagger_PlayerAction();
                 }
             }
@@ -236,11 +276,11 @@ namespace Collaborative_rpg_project
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+                EnemyStatus = OverwriteStatus(EnemyStatus, "Burnt");
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
                 Console.WriteLine("You throw a moloktov cocktail  for " + DamageBeingDealt + " damage!!!");
                 StatusText();
-
             }
 
             //The player Attacks the enemy for frost damage                         //PLACEHOLDER
@@ -249,11 +289,11 @@ namespace Collaborative_rpg_project
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+                EnemyStatus = OverwriteStatus(EnemyStatus, "Frozen");
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
                 Console.WriteLine("You shatter the enemy with a ice-pick for " + DamageBeingDealt + " damage!!!");
                 StatusText();
-
             }
 
             //The player Attacks the enemy for poison damage                        //PLACEHOLDER
@@ -262,11 +302,11 @@ namespace Collaborative_rpg_project
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+                EnemyStatus = OverwriteStatus(EnemyStatus, "Acidic");
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
                 Console.WriteLine("You spat a poiosnous dart at the enemy for " + DamageBeingDealt + " damage!!!");
                 StatusText();
-
             }
 
             //The player Attacks the enemy for bleed damage                         //PLACEHOLDER
@@ -275,11 +315,31 @@ namespace Collaborative_rpg_project
                 CriticalCheck(PlayerCritText);
                 EnemyFloatList[0] -= DamageBeingDealt;
                 UpdateVariables();
+                EnemyStatus = OverwriteStatus(EnemyStatus, "Bleeding");
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
                 Console.WriteLine("You stabbed the enemy with a dagger for " + DamageBeingDealt + " damage!!!");
                 StatusText();
+            }
 
+            void BurnStatusEffect(float[] TargetFloatList)
+            {
+                //Insert Burn Status Effect here
+            }
+
+            void FreezeStatusEffect(float[] TargetFloatList)
+            {
+                //Insert Freeze Status Effect here
+            }
+
+            void AcidicStatusEffect(float[] TargetFloatList)
+            {
+                //Insert Acidic Status Effect here
+            }
+
+            void BleedStatusEffect(float[] TargetFloatList)
+            {
+                //Insert Bleed Status Effect here
             }
         }
     }
