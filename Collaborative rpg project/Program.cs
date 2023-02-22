@@ -93,7 +93,7 @@ namespace Collaborative_rpg_project
             void NextText_Placeholder()
             {
                 Console.WriteLine("Press ENTER to continue");
-                TempInput = Console.ReadLine();
+                Console.ReadLine();
                 Console.Clear();
             }
 
@@ -161,29 +161,32 @@ namespace Collaborative_rpg_project
             //Handles the selection of the players action
             void PlayerOptionsSelection()
             {
-                TempInput = Console.ReadLine();
-                
-                if (TempInput == "1")
+                //TempInput = Console.ReadLine();
+                //assigns a variable for the inputed key
+                ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
+
+
+                if (consoleKeyInfo.KeyChar == '1')
                 {
                     DamageBeingDealt = PlayerAttack;
                     Sword_PlayerAction();
                 }
-                else if (TempInput == "2")
+                else if (consoleKeyInfo.KeyChar == '2')
                 {
                     DamageBeingDealt = PlayerAttack;
                     Moloktov_PlayerAction();
                 }
-                else if (TempInput == "3")
+                else if (consoleKeyInfo.KeyChar == '3')
                 {
                     DamageBeingDealt = PlayerAttack;
                     IcePick_PlayerAction();
                 }
-                else if (TempInput == "4")
+                else if (consoleKeyInfo.KeyChar == '4')
                 {
                     DamageBeingDealt = PlayerAttack;
                     BlowDart_PlayerAction();
                 }
-                else if (TempInput == "5")
+                else if (consoleKeyInfo.KeyChar == '5')
                 {
                     DamageBeingDealt = PlayerAttack;
                     Dagger_PlayerAction();
@@ -206,7 +209,7 @@ namespace Collaborative_rpg_project
 
                 //output text to inform user of what happened
                 Console.WriteLine("The Enemy has attacked the Player!!!");
-                Console.WriteLine("The Enemy did" + DamageBeingDealt + "damage!!!");
+                Console.WriteLine("The Enemy did " + DamageBeingDealt + " damage!!!");
                 Console.WriteLine("");
 
                 NextText_Placeholder();
