@@ -27,13 +27,14 @@ namespace Collaborative_rpg_project
             bool IsFrozen = false;
             int AcidicMaxTurns = 3;
             int AcidicTurns = 0;
-
             bool IsAcidic = false;
             float AcidicModifier = 0.5f;
             float AcidDamage = 0;
-
             int BleedMaxTurns = 3;
             int BleedTurns = 0;
+
+            int BleedCritModifier = 32;
+            bool IsBleed = false;
 
             //Player Variables
             float PlayerHP = 100;
@@ -88,6 +89,17 @@ namespace Collaborative_rpg_project
             {
                 Random rnd = new Random();
                 CriticalHit = rnd.Next(1, 100);
+
+
+                if (IsBleed == true && CritText == PlayerCritText)
+                {
+                    CriticalHit -= BleedCritModifier;
+                }
+                
+                if (BleedTurns == (BleedMaxTurns - 1) && CritText == EnemyCritText)
+                {
+                    CriticalHit = 0;
+                }
 
                 //checks if the critical hit is within range of 12
 
@@ -465,9 +477,14 @@ namespace Collaborative_rpg_project
             {
                 BleedTurns -= 1;
 
+                if (BleedTurns == (BleedMaxTurns - 1))
+                {
+                    Console.WriteLine("The enemy enters a rage and is guaranteed to hit critically");
+                }
+
                 if (BleedTurns > 0)
                 {
-                    //Insert Bleed Status Effect here
+                    IsBleed = true;
                 }
                 else
                 {
