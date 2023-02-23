@@ -32,7 +32,6 @@ namespace Collaborative_rpg_project
             float AcidDamage = 0;
             int BleedMaxTurns = 3;
             int BleedTurns = 0;
-
             int BleedCritModifier = 32;
             bool IsBleed = false;
 
@@ -59,21 +58,25 @@ namespace Collaborative_rpg_project
             TitleScreen();
             while (IsGameRunning == true)
             {
+                //Playing the Players turn if the game should not be finishing
                 CheckForGameOver();
                 if(IsGameRunning == true)
                 {
                     PlayerTurn();
                 }
+
+                //Playing the Enemies turn if the game should not be finishing
                 CheckForGameOver();
                 if (IsGameRunning == true)
                 {
                     EnemyTurn();
                 }
             }
+            //Handleing the end of the game
             NextText_Placeholder();
             Console.WriteLine("GAME OVER");
 
-            //SYSTEM FUNCTION           =========================================================
+            //SYSTEM FUNCTIONS           =========================================================
 
             //A function that handes the start of the game
             void TitleScreen()
@@ -87,22 +90,23 @@ namespace Collaborative_rpg_project
             //Runs the check to see whether an effect is critical or not
             void CriticalCheck(string CritText)
             {
+                //Getting the random value
                 Random rnd = new Random();
                 CriticalHit = rnd.Next(1, 100);
 
-
+                //Increasing the crit rate if the Player is critting and the enemy is bleeding
                 if (IsBleed == true && CritText == PlayerCritText)
                 {
                     CriticalHit -= BleedCritModifier;
                 }
                 
+                //If it is the first turn of an enemy bleeding, guarantee its crit
                 if (BleedTurns == (BleedMaxTurns - 1) && CritText == EnemyCritText)
                 {
                     CriticalHit = 0;
                 }
 
                 //checks if the critical hit is within range of 12
-
                 if (CriticalHit < CriticalChance)
                 {
                     //operation for critical hit damage
@@ -119,15 +123,20 @@ namespace Collaborative_rpg_project
             //Handles the assigning of a status effect to a target
             string OverwriteStatus(string PriorStatus, string NewStatus)
             {
+                //Checking that the status wants to be changed
                 if (NewStatus != PriorStatus)
                 {
+                    //Resetting status related variables
                     IsAcidic = false;
                     IsFrozen = false;
 
+                    //Not allowing frozen to overwrite chilled
                     if (NewStatus == "Frozen" && PriorStatus == "Chilled")
                     {
                         return PriorStatus;
                     }
+
+                    //Overwriting status and declaring that a status interaction has occured
                     Console.WriteLine("A status interaction has occured: " + PriorStatus + " ---------> " + NewStatus);
                     PriorStatus = NewStatus;
                     Console.WriteLine("");
@@ -205,26 +214,36 @@ namespace Collaborative_rpg_project
                 }
             }
 
+            //Handling Damage being dealt
+            void DealDamage(float[] FloatList, float HP, bool[] BoolList)
+            {
+                FloatList[0] -= DamageBeingDealt;
+                UpdateVariables();
+                CheckForDeath(HP, BoolList);
+                UpdateVariables();
+            }
+
             //PLAYER + ENEMY FUNCTIONS  =========================================================
 
             //Handles the events of the players turn
             void PlayerTurn()
             {
                 Console.WriteLine("It is the Players turn");
+
+                //Checking for whether the player should suffer from Acid recoil
                 if (IsAcidic == true)
                 {
+                    //Setting acid recoil damage
                     Random rnd = new Random();
                     AcidDamage = rnd.Next(1, 3);
                     DamageBeingDealt = AcidDamage;
-
-                    PlayerFloatList[0] -= DamageBeingDealt;
-                    UpdateVariables();
-                    CheckForDeath(PlayerHP, PlayerBoolList);
-                    UpdateVariables();
+                    DealDamage(PlayerFloatList, PlayerHP, PlayerBoolList);
 
                     Console.WriteLine("A small amount of acid drips off of the enemy and deals " + AcidDamage + " Damage");
                 }
                 StatusText();
+
+                //Providing Player Options and Handling the selection of said options
                 Console.WriteLine("What would you like to do?");
                 PlayerOptionsText();
                 PlayerOptionsSelection();
@@ -245,7 +264,6 @@ namespace Collaborative_rpg_project
             //Handles the selection of the players action
             void PlayerOptionsSelection()
             {
-                //TempInput = Console.ReadLine();
                 //assigns a variable for the inputed key
                 ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
 
@@ -282,18 +300,21 @@ namespace Collaborative_rpg_project
             {
                 Console.WriteLine("It is the Enemy's turn");
 
+                //Handling the effect that a status would do
                 EnemyStatus = StatusEffectsMaster(EnemyFloatList, EnemyStatus);
                 StatusText();
 
+                //Handling a frozen turn
                 if (IsFrozen == true)
                 { 
                     Console.WriteLine("However the Enenmy cant act because it is Frozen still");
                 }
                 else
                 {
-                    //damaging the target
+                    //Handling a non-frozen turns assigned attack and damage
                     DamageBeingDealt = EnemyAttack;
-
+                    
+                    //Handling whether the Damage is reduced by acid or not
                     if (IsAcidic == true)
                     {
                         DamageBeingDealt *= AcidicModifier;
@@ -301,10 +322,8 @@ namespace Collaborative_rpg_project
                     }
 
                     CriticalCheck(EnemyCritText);
-                    PlayerFloatList[0] -= DamageBeingDealt;
-                    UpdateVariables();
-                    CheckForDeath(PlayerHP, PlayerBoolList);
-                    UpdateVariables();
+
+                    DealDamage(PlayerFloatList, PlayerHP, PlayerBoolList);
 
                     //output text to inform user of what happened
                     Console.WriteLine("The Enemy has attacked the Player!!!");
@@ -322,109 +341,102 @@ namespace Collaborative_rpg_project
             {
                 DamageBeingDealt = PlayerAttack * DamageMultiplier;
                 CriticalCheck(PlayerCritText);
-                EnemyFloatList[0] -= DamageBeingDealt;
-                UpdateVariables();
-                CheckForDeath(EnemyHP, EnemyBoolList);
-                UpdateVariables();
+
+                DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
+
+                //Outputting text
                 Console.WriteLine("You attack the enemy with a sword for " + DamageBeingDealt + " damage!!!");
                 StatusText();
                 
             }
 
-            //The player Attacks the enemy for fire damage                          //PLACEHOLDER
+            //The player Attacks the enemy for fire damage                          
             void Moloktov_PlayerAction()
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
 
-                //Regular attack stuff
-                EnemyFloatList[0] -= DamageBeingDealt;
-                UpdateVariables();
+                DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
 
                 //Burn status stuff
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Burnt");
                 BurnTurns = BurnMaxTurns;
                 BurnDamage = DamageBeingDealt * BurnDamageModifier;
 
-                CheckForDeath(EnemyHP, EnemyBoolList);
-                UpdateVariables();
-
+                //Outputting text
                 Console.WriteLine("You throw a moloktov cocktail  for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
 
-            //The player Attacks the enemy for frost damage                         //PLACEHOLDER
+            //The player Attacks the enemy for frost damage                         
             void IcePick_PlayerAction()
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
 
-                EnemyFloatList[0] -= DamageBeingDealt;
-                UpdateVariables();
+                DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
 
+                //Ice status stuff
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Frozen");
                 if (EnemyStatus == "Frozen")
                 {
                     FreezeTurns = FreezeMaxTurns;
                 }
 
-                CheckForDeath(EnemyHP, EnemyBoolList);
-                UpdateVariables();
-
+                //Outputting text
                 Console.WriteLine("You shatter the enemy with a ice-pick for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
 
-            //The player Attacks the enemy for poison damage                        //PLACEHOLDER
+            //The player Attacks the enemy for poison damage                        
             void BlowDart_PlayerAction()
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
 
-                EnemyFloatList[0] -= DamageBeingDealt;
-                UpdateVariables();
+                DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
 
+                //Acidic status stuff
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Acidic");
                 AcidicTurns = AcidicMaxTurns;
 
-                CheckForDeath(EnemyHP, EnemyBoolList);
-                UpdateVariables();
-
+                //Outputting text
                 Console.WriteLine("You spat a poiosnous dart at the enemy for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
 
-            //The player Attacks the enemy for bleed damage                         //PLACEHOLDER
+            //The player Attacks the enemy for bleed damage                         
             void Dagger_PlayerAction()
             {
                 DamageBeingDealt = PlayerAttack;
                 CriticalCheck(PlayerCritText);
 
-                EnemyFloatList[0] -= DamageBeingDealt;
-                UpdateVariables();
+                DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
 
+                //Bleed status stuff
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Bleeding");
                 BleedTurns = BleedMaxTurns;
 
-                CheckForDeath(EnemyHP, EnemyBoolList);
-                UpdateVariables();
-
+                //Outputting text
                 Console.WriteLine("You stabbed the enemy with a dagger for " + DamageBeingDealt + " damage!!!");
                 StatusText();
             }
 
+            //The status effect for burn
             string BurnStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
-                //Insert Burn Status Effect here
                 BurnTurns -= 1;
                 
                 if (BurnTurns > 0)
                 {
-                    TargetFloatList[0] -= BurnDamage;
+                    //Dealing burn damage
+                    DamageBeingDealt = BurnDamage;
+                    DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
                     Console.WriteLine("They take " + BurnDamage + " damge from burn!!!");
                 }
                 else
                 {
+                    //naturally removing burn
                     TargetStatus = "";
                     Console.WriteLine("They are cured of burn");
                 }
@@ -432,22 +444,26 @@ namespace Collaborative_rpg_project
                 return TargetStatus;
             }
 
+            //The status effect for freeze
             string FreezeStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
                 FreezeTurns -= 1;
 
                 if (FreezeTurns == (FreezeMaxTurns - 1))
                 {
+                    //Freezing enemy
                     IsFrozen = true;
                 }
                 else if (FreezeTurns > 0)
                 {
+                    //Chilling enemy
                     IsFrozen = false;
                     TargetStatus = "Chilled";
                     Console.WriteLine("They remain Chilled but are no longer Frozen still");
                 }
                 else
                 {
+                    //naturally removing chill
                     TargetStatus = "";
                     Console.WriteLine("They are cured of Chilled");
                 }
@@ -455,16 +471,19 @@ namespace Collaborative_rpg_project
                 return TargetStatus;
             }
 
+            //The status effect for acidic
             string AcidicStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
                 AcidicTurns -= 1;
 
                 if (AcidicTurns > 0)
                 {
+                    //Acidifying Enemy
                     IsAcidic = true;
                 }
                 else
                 {
+                    //Naturally removing acid
                     TargetStatus = "";
                     IsAcidic = false;
                     Console.WriteLine("They are cured of Acidic");
@@ -473,21 +492,25 @@ namespace Collaborative_rpg_project
                 return TargetStatus;
             }
 
+            //The status effect for bleed
             string BleedStatusEffect(float[] TargetFloatList, string TargetStatus)
             {
                 BleedTurns -= 1;
 
                 if (BleedTurns == (BleedMaxTurns - 1))
                 {
+                    //Alerting Player of enemies guaranteed crit
                     Console.WriteLine("The enemy enters a rage and is guaranteed to hit critically");
                 }
 
                 if (BleedTurns > 0)
                 {
+                    //Bleeding the enemy
                     IsBleed = true;
                 }
                 else
                 {
+                    //naturally removing bleed
                     TargetStatus = "";
                     Console.WriteLine("They are cured of Bleed");
                 }
