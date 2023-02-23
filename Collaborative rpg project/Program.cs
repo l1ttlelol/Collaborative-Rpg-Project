@@ -27,6 +27,11 @@ namespace Collaborative_rpg_project
             bool IsFrozen = false;
             int AcidicMaxTurns = 3;
             int AcidicTurns = 0;
+
+            bool IsAcidic = false;
+            float AcidicModifier = 0.5f;
+            float AcidDamage = 0;
+
             int BleedMaxTurns = 3;
             int BleedTurns = 0;
 
@@ -104,6 +109,9 @@ namespace Collaborative_rpg_project
             {
                 if (NewStatus != PriorStatus)
                 {
+                    IsAcidic = false;
+                    IsFrozen = false;
+
                     if (NewStatus == "Frozen" && PriorStatus == "Chilled")
                     {
                         return PriorStatus;
@@ -191,6 +199,19 @@ namespace Collaborative_rpg_project
             void PlayerTurn()
             {
                 Console.WriteLine("It is the Players turn");
+                if (IsAcidic == true)
+                {
+                    Random rnd = new Random();
+                    AcidDamage = rnd.Next(1, 3);
+                    DamageBeingDealt = AcidDamage;
+
+                    PlayerFloatList[0] -= DamageBeingDealt;
+                    UpdateVariables();
+                    CheckForDeath(PlayerHP, PlayerBoolList);
+                    UpdateVariables();
+
+                    Console.WriteLine("A small amount of acid drips off of the enemy and deals " + AcidDamage + " Damage");
+                }
                 StatusText();
                 Console.WriteLine("What would you like to do?");
                 PlayerOptionsText();
@@ -260,6 +281,13 @@ namespace Collaborative_rpg_project
                 {
                     //damaging the target
                     DamageBeingDealt = EnemyAttack;
+
+                    if (IsAcidic == true)
+                    {
+                        DamageBeingDealt *= AcidicModifier;
+                        Console.WriteLine("The Enemies weapon has melted due to the acid making it less efficient");
+                    }
+
                     CriticalCheck(EnemyCritText);
                     PlayerFloatList[0] -= DamageBeingDealt;
                     UpdateVariables();
@@ -421,11 +449,12 @@ namespace Collaborative_rpg_project
 
                 if (AcidicTurns > 0)
                 {
-                    //Insert Acidic Status Effect here
+                    IsAcidic = true;
                 }
                 else
                 {
                     TargetStatus = "";
+                    IsAcidic = false;
                     Console.WriteLine("They are cured of Acidic");
                 }
                 UpdateVariables();
