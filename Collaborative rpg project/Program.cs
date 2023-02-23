@@ -24,6 +24,7 @@ namespace Collaborative_rpg_project
             int BurnTurns = 0;
             int FreezeMaxTurns = 4;
             int FreezeTurns = 0;
+            bool IsFrozen = false;
             int AcidicMaxTurns = 3;
             int AcidicTurns = 0;
             int BleedMaxTurns = 3;
@@ -103,6 +104,10 @@ namespace Collaborative_rpg_project
             {
                 if (NewStatus != PriorStatus)
                 {
+                    if (NewStatus == "Frozen" && PriorStatus == "Chilled")
+                    {
+                        return PriorStatus;
+                    }
                     Console.WriteLine("A status interaction has occured: " + PriorStatus + " ---------> " + NewStatus);
                     PriorStatus = NewStatus;
                     Console.WriteLine("");
@@ -118,7 +123,7 @@ namespace Collaborative_rpg_project
                 {
                     TargetStatus = BurnStatusEffect(TargetFloatList, TargetStatus);
                 }
-                else if (TargetStatus == "Frozen")
+                else if (TargetStatus == "Frozen" || TargetStatus == "Chilled")
                 {
                     TargetStatus = FreezeStatusEffect(TargetFloatList, TargetStatus);
                 }
@@ -185,8 +190,8 @@ namespace Collaborative_rpg_project
             //Handles the events of the players turn
             void PlayerTurn()
             {
-                StatusText();
                 Console.WriteLine("It is the Players turn");
+                StatusText();
                 Console.WriteLine("What would you like to do?");
                 PlayerOptionsText();
                 PlayerOptionsSelection();
@@ -242,22 +247,29 @@ namespace Collaborative_rpg_project
             //Handles the events of the enemies turn
             void EnemyTurn()
             {
-                StatusText();
                 Console.WriteLine("It is the Enemy's turn");
 
                 EnemyStatus = StatusEffectsMaster(EnemyFloatList, EnemyStatus);
+                StatusText();
 
-                //damaging the target
-                DamageBeingDealt = EnemyAttack;
-                CriticalCheck(EnemyCritText);
-                PlayerFloatList[0] -= DamageBeingDealt;
-                UpdateVariables();
-                CheckForDeath(PlayerHP, PlayerBoolList);
-                UpdateVariables();
+                if (IsFrozen == true)
+                { 
+                    Console.WriteLine("However the Enenmy cant act because it is Frozen still");
+                }
+                else
+                {
+                    //damaging the target
+                    DamageBeingDealt = EnemyAttack;
+                    CriticalCheck(EnemyCritText);
+                    PlayerFloatList[0] -= DamageBeingDealt;
+                    UpdateVariables();
+                    CheckForDeath(PlayerHP, PlayerBoolList);
+                    UpdateVariables();
 
-                //output text to inform user of what happened
-                Console.WriteLine("The Enemy has attacked the Player!!!");
-                Console.WriteLine("The Enemy did " + DamageBeingDealt + " damage!!!");
+                    //output text to inform user of what happened
+                    Console.WriteLine("The Enemy has attacked the Player!!!");
+                    Console.WriteLine("The Enemy did " + DamageBeingDealt + " damage!!!");
+                }
                 Console.WriteLine("");
 
                 NextText_Placeholder();
@@ -311,7 +323,10 @@ namespace Collaborative_rpg_project
                 UpdateVariables();
 
                 EnemyStatus = OverwriteStatus(EnemyStatus, "Frozen");
-                FreezeTurns = FreezeMaxTurns;
+                if (EnemyStatus == "Frozen")
+                {
+                    FreezeTurns = FreezeMaxTurns;
+                }
 
                 CheckForDeath(EnemyHP, EnemyBoolList);
                 UpdateVariables();
@@ -381,9 +396,15 @@ namespace Collaborative_rpg_project
             {
                 FreezeTurns -= 1;
 
-                if (FreezeTurns > 0)
+                if (FreezeTurns == (FreezeMaxTurns - 1))
                 {
-                    //Insert Freeze Status Effect here
+                    IsFrozen = true;
+                }
+                else if (FreezeTurns > 0)
+                {
+                    IsFrozen = false;
+                    TargetStatus = "Chilled";
+                    Console.WriteLine("They remain Chilled but are no longer Frozen still");
                 }
                 else
                 {
