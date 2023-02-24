@@ -18,7 +18,7 @@ namespace Collaborative_rpg_project
             float CriticalHitMultipler = 2;
 
             //Status Variables
-            float BurnDamageModifier = 0.5f;
+            float BurnDamageModifier = 0.7f;
             float BurnDamage = 0f;
             int BurnMaxTurns = 3;
             int BurnTurns = 0;
@@ -28,26 +28,26 @@ namespace Collaborative_rpg_project
             int AcidicMaxTurns = 3;
             int AcidicTurns = 0;
             bool IsAcidic = false;
-            float AcidicModifier = 0.5f;
+            float AcidicModifier = 0.7f;
             float AcidDamage = 0;
             int BleedMaxTurns = 3;
             int BleedTurns = 0;
-            int BleedCritModifier = 32;
+            int BleedCritModifier = 38;
             bool IsBleed = false;
 
             //Player Variables
             float PlayerHP = 100;
             float PlayerMaxHP = 100;
-            float PlayerAttack = 5;
+            float PlayerAttack = 10;
             bool IsPlayerDead = false;
             string PlayerCritText = "You got a critical hit! ";
             float[] PlayerFloatList = new float[3] { PlayerHP, PlayerMaxHP, PlayerAttack };
             bool[] PlayerBoolList = new bool[1] { IsPlayerDead };
 
             //Enemy Variables
-            float EnemyHP = 100;
-            float EnemyMaxHP = 100;
-            float EnemyAttack = 5;
+            float EnemyHP = 150;
+            float EnemyMaxHP = 150;
+            float EnemyAttack = 10;
             bool IsEnemyDead = false;
             string EnemyCritText = "The Enemy Attacked you and got a critical hit! ";
             string EnemyStatus = "";
@@ -129,6 +129,7 @@ namespace Collaborative_rpg_project
                     //Resetting status related variables
                     IsAcidic = false;
                     IsFrozen = false;
+                    IsBleed = false;
 
                     //Not allowing frozen to overwrite chilled
                     if (NewStatus == "Frozen" && PriorStatus == "Chilled")
@@ -156,7 +157,7 @@ namespace Collaborative_rpg_project
                 {
                     TargetStatus = FreezeStatusEffect(TargetFloatList, TargetStatus);
                 }
-                else if (TargetStatus == "Acidic")
+                else if (TargetStatus == "Dripping with Acid")
                 {
                     TargetStatus = AcidicStatusEffect(TargetFloatList, TargetStatus);
                 }
@@ -254,11 +255,11 @@ namespace Collaborative_rpg_project
             void PlayerOptionsText()
             {
                 Console.WriteLine("Enter a number for which weapon you would like to attack with:");
-                Console.WriteLine("1) Sword");
-                Console.WriteLine("2) Moloktov Cocktail");
-                Console.WriteLine("3) Ice-Pick");
-                Console.WriteLine("4) Blow Dart");
-                Console.WriteLine("5) Dagger");
+                Console.WriteLine("1) Sword               - High physical damage");
+                Console.WriteLine("2) Moloktov Cocktail   - Sets the enemy ablaze");
+                Console.WriteLine("3) Ice-Pick            - Freezes the enemy for the next turn");
+                Console.WriteLine("4) Bottle of Acid      - Coats the enemy in acid which errodes their weapon");
+                Console.WriteLine("5) Dagger              - Leave a gaping wound in the target");
             }
 
             //Handles the selection of the players action
@@ -345,7 +346,7 @@ namespace Collaborative_rpg_project
                 DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
 
                 //Outputting text
-                Console.WriteLine("You attack the enemy with a sword for " + DamageBeingDealt + " damage!!!");
+                Console.WriteLine("You slash the enemy with a sword for " + DamageBeingDealt + " damage!!!");
                 StatusText();
                 
             }
@@ -364,7 +365,7 @@ namespace Collaborative_rpg_project
                 BurnDamage = DamageBeingDealt * BurnDamageModifier;
 
                 //Outputting text
-                Console.WriteLine("You throw a moloktov cocktail  for " + DamageBeingDealt + " damage!!!");
+                Console.WriteLine("You throw a moloktov cocktail at the enemy for " + DamageBeingDealt + " damage, setting the enemy ablaze with the combusting liquor!!!");
                 StatusText();
             }
 
@@ -384,7 +385,7 @@ namespace Collaborative_rpg_project
                 }
 
                 //Outputting text
-                Console.WriteLine("You shatter the enemy with a ice-pick for " + DamageBeingDealt + " damage!!!");
+                Console.WriteLine("You shatter the enemy with a ice-pick (pick made of ice) for " + DamageBeingDealt + " damage, freezing them for the next turn!!!");
                 StatusText();
             }
 
@@ -397,11 +398,11 @@ namespace Collaborative_rpg_project
                 DealDamage(EnemyFloatList, EnemyHP, EnemyBoolList);
 
                 //Acidic status stuff
-                EnemyStatus = OverwriteStatus(EnemyStatus, "Acidic");
+                EnemyStatus = OverwriteStatus(EnemyStatus, "Dripping with Acid");
                 AcidicTurns = AcidicMaxTurns;
 
                 //Outputting text
-                Console.WriteLine("You spat a poiosnous dart at the enemy for " + DamageBeingDealt + " damage!!!");
+                Console.WriteLine("You smashed a bottle of acid on the enemy for " + DamageBeingDealt + " damage, while also melting their weapon partially!!!");
                 StatusText();
             }
 
@@ -418,7 +419,7 @@ namespace Collaborative_rpg_project
                 BleedTurns = BleedMaxTurns;
 
                 //Outputting text
-                Console.WriteLine("You stabbed the enemy with a dagger for " + DamageBeingDealt + " damage!!!");
+                Console.WriteLine("You stabbed the enemy with a dagger for " + DamageBeingDealt + " damage, leaving a deep open wound!!!");
                 StatusText();
             }
 
